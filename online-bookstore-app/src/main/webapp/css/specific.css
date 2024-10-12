@@ -1,0 +1,66 @@
+/*start edit*/
+
+ul{
+    display: flex;
+}
+ul li{
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+}
+ul li .gap{
+    margin: 0 80px;
+}
+
+/* Progress Div Css  */
+
+ul li .progress{
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: rgba(68, 68, 68, 0.781);
+    margin: 14px 0;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    position: relative;
+    pointer-events: none;
+}
+.progress::after{
+    content: " ";
+    position: absolute;
+    width: 120px;
+    height: 5px;
+    background-color: rgba(68, 68, 68, 0.781);
+    right: 35px;
+    pointer-events: none;
+}
+.one::after{
+    width: 0;
+    height: 0;
+}
+ul li .progress .uil{
+    display: none;
+}
+
+
+/* Active Css  */
+
+ul li .active{
+    background-color: green;
+    display: grid;
+    place-items: center;
+}
+li .active::after{
+    background-color: green;
+}
+ul li .active p{
+    display: none;
+}
+
+ul li .active .uil{
+    font-size: 20px;
+    display: flex;
+}
