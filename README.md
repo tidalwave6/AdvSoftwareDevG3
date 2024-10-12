@@ -3,11 +3,11 @@
 AdvSoftwareDev Group 3  
 Online Bookstore System
 
-**GitHub Repository**: https://github.com/nixonboros/AdvSoftwareDevG3
+**GitHub Repository**: https://github.com/tidalwave6/AdvSoftwareDevG3
 
 ## Team Member Responsibilities
 
-- **Jerry** 
+- **Jerry** LEFT
   - Cleaned up index.jsp (added Best Sellers section)
   - Login/Register
   - User Dashboard (Edit and view account details, delete account) 
@@ -19,7 +19,7 @@ Online Bookstore System
   - UserTest test class (Testing: creating, updating and deleting of users in database)
   - BookTest test class (Testing: creating and deleting of books in database)
 
-- **Nixon**
+- **Nixon** LEFT
   - Customer Support Feature (user/staff support chat, viewing and opening/closing tickets)
   - Notifications Feature
   - Tomcat server setup 
