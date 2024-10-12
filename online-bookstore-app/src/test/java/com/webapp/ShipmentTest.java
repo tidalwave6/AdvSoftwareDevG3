@@ -97,3 +97,4 @@ public class ShipmentTest {
         Assert.assertTrue(dbManager.getShipmentByID(1000) == null);
     }
 }
+ 
