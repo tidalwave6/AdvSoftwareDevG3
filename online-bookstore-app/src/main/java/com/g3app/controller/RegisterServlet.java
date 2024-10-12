@@ -19,14 +19,9 @@ public class RegisterServlet extends HttpServlet {
         String lastName = request.getParameter("lastName");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-        String dob = request.getParameter("dob");
-        String phone = request.getParameter("countryCode") + request.getParameter("phone");
         String address = request.getParameter("address");
-        String city = request.getParameter("city");
-        String postcode = request.getParameter("postcode");
-        String country = request.getParameter("country");
-
-        User newUser = new User(firstName, lastName, email, password, dob, phone, address, city, postcode, country);
+        
+        User newUser = new User(firstName, lastName, email, password, address);
 
         try {
             DBConnector connector = new DBConnector();

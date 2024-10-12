@@ -16,13 +16,12 @@ import java.sql.Connection;
 public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String email = request.getParameter("email");
-        String password = request.getParameter("password");
 
         try {
             DBConnector connector = new DBConnector();
             Connection conn = connector.openConnection();
             DBManager dbManager = new DBManager(conn);
-            User user = dbManager.findUser(email, password);
+            User user = dbManager.findUser(email);
             connector.closeConnection();
 
             if (user != null) {

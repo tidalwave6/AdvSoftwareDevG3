@@ -13,17 +13,12 @@ public class User {
     private String country;  
 
     // Constructor
-    public User(String firstName, String lastName, String email, String password, String dob, String phone, String address, String city, String postcode, String country) {
+    public User(String firstName, String lastName, String email, String password, String address) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email; 
         this.password = password;
-        this.dob = dob;
-        this.phone = phone;
         this.address = address;
-        this.city = city;
-        this.postcode = postcode;
-        this.country = country;
     }
 
     // Getters and Setters

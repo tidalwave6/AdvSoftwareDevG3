@@ -11,8 +11,6 @@ import com.g3app.model.Shipment;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 
 public class ShipmentTest {
     
@@ -95,6 +93,11 @@ public class ShipmentTest {
         Assert.assertTrue(dbManager.getShipmentByID(1000) != null);
         dbManager.deleteShipment(shipment);
         Assert.assertTrue(dbManager.getShipmentByID(1000) == null);
+    }
+    
+    @org.junit.After
+    public void tearDown() throws SQLException {
+        if (connection != null) {connection.close();}
     }
 }
  

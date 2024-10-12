@@ -44,33 +44,29 @@ public class UpdateAccountServlet extends HttpServlet {
             }
 
             // Update the user details (send password only if it's updated)
-            boolean success = dbManager.updateUserDetails(
-                user.getEmail(), // Identify the user by email
-                firstName, lastName, email, user.getPassword(), dob, phone, address, city, postcode, country
-            );
+            User newUser = new User(firstName, lastName,user.getEmail() ,user.getPassword(), address);
+            newUser.setDob(dob);
+            newUser.setPhone(phone);
+            newUser.setCity(city);
+            newUser.setPostcode(postcode);
+            newUser.setCountry(country);
+            dbManager.updateUserDetails(newUser);
 
             // Close database connection
             connector.closeConnection();
 
-            if (success) {
-                // Update session with new user details
-                user.setFirstName(firstName);
-                user.setLastName(lastName);
-                user.setEmail(email);
-                user.setDob(dob);
-                user.setPhone(phone);
-                user.setAddress(address);
-                user.setCity(city);
-                user.setPostcode(postcode);
-                user.setCountry(country);
-                session.setAttribute("user", user);
-
-                // Redirect to success page
-                response.sendRedirect("detailUpdate_success.jsp");
-            } else {
-                // Redirect to account details page with error message
-                response.sendRedirect("mydetails.jsp?status=error");
-            }
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
+            user.setEmail(email);
+            user.setDob(dob);
+            user.setPhone(phone);
+            user.setAddress(address);
+            user.setCity(city);
+            user.setPostcode(postcode);
+            user.setCountry(country);
+            session.setAttribute("user", user);
+            response.sendRedirect("detailUpdate_success.jsp");
+            
         } catch (Exception e) {
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Update failed.");

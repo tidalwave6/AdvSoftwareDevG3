@@ -19,21 +19,16 @@ public class DBManager {
     }
 
     // find customer user
-    public User findUser(String email, String password) throws SQLException {
-        String query = "SELECT * FROM users WHERE email = '" + email + "' AND password = '" + password + "'";
+    public User findUser(String email) throws SQLException {
+        String query = "SELECT * FROM users WHERE email = '" + email + "'";
         ResultSet rs = st.executeQuery(query);
         if (rs.next()) {
             return new User(
                 rs.getString("firstName"),
                 rs.getString("lastName"),
                 rs.getString("email"),
-                rs.getString("password"),
-                rs.getString("dob"),
-                rs.getString("phone"),
-                rs.getString("address"),
-                rs.getString("city"),
-                rs.getString("postcode"),
-                rs.getString("country")
+                rs.getString("password"),            
+                rs.getString("address")
             );
         }
         return null; // No user found
@@ -217,25 +212,22 @@ public class DBManager {
 }
 
     
-  public boolean updateUserDetails(String oldEmail, String firstName, String lastName, String email, String password, String dob, String phone, String address, String city, String postcode, String country) throws SQLException {
-    String query = "UPDATE users SET firstName = ?, lastName = ?, email = ?, password = ?, dob = ?, phone = ?, address = ?, city = ?, postcode = ?, country = ? WHERE email = ?";
+  public void updateUserDetails(User user) throws SQLException {
+    String query = "UPDATE users SET firstName = ?, lastName = ?, password = ?, dob = ?, phone = ?, address = ?, city = ?, postcode = ?, country = ? WHERE email = ?";
     PreparedStatement pstmt = st.getConnection().prepareStatement(query);
     
     try{
-        pstmt.setString(1, firstName);
-        pstmt.setString(2, lastName);
-        pstmt.setString(3, email);
-        pstmt.setString(4, password);
-        pstmt.setString(5, dob);
-        pstmt.setString(6, phone);
-        pstmt.setString(7, address);
-        pstmt.setString(8, city);
-        pstmt.setString(9, postcode);
-        pstmt.setString(10, country);
-        pstmt.setString(11, oldEmail); // identify user by old email
-        
-        int rowsAffected = pstmt.executeUpdate();
-        return rowsAffected > 0; // returns true if one row was updated
+        pstmt.setString(1, user.getFirstName());
+        pstmt.setString(2, user.getLastName());
+        pstmt.setString(3, user.getPassword());
+        pstmt.setString(4, user.getDob());
+        pstmt.setString(5, user.getPhone());
+        pstmt.setString(6, user.getAddress());
+        pstmt.setString(7, user.getCity());
+        pstmt.setString(8, user.getPostcode());
+        pstmt.setString(9, user.getCountry());
+        pstmt.setString(10, user.getEmail()); // identify user by old email
+        pstmt.executeUpdate();
     }
     finally {
         if (pstmt != null) {
