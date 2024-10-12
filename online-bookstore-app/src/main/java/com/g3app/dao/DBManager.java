@@ -541,22 +541,6 @@ public SupportTicket getSupportTicketById(int ticketId) throws SQLException {
         return null;
     }
     
-    public ArrayList<Shipment> getAllShipments() throws SQLException {
-    String query = "SELECT * FROM shipments";
-    ResultSet rs = st.executeQuery(query);
-    ArrayList<Shipment> shipments = new ArrayList<>();
-    while (rs.next()) {
-        // Use the constructor with parameters
-        Shipment shipment = new Shipment();
-        shipment.setID(rs.getInt("ShipmentID"));
-        shipment.setDate(rs.getString("ShipmentDate"));
-        shipment.setProgress(rs.getString("ShipmentProgress"));
-        shipment.setStatus(rs.getString("ShipmentStatus"));
-        shipments.add(shipment);
-    }
-    return shipments;
-}
-    
 public void addPaymentMethod(Payment payment) throws SQLException {
         String query = "INSERT INTO payments (cardNumber, expiryDate, cardHolderName) VALUES (?, ?, ?)";
         PreparedStatement pstmt = st.getConnection().prepareStatement(query);

@@ -24,7 +24,8 @@ public class DeleteShipmentServlet extends HttpServlet{
             Shipment shipment = dbManager.getShipmentByID(Integer.parseInt(shipmentID));
             dbManager.deleteShipment(shipment);
             connector.closeConnection();
-            response.sendRedirect(request.getRequestURI());
+            response.sendRedirect(request.getHeader("referer"));
+            
 
         } catch (Exception e) {
             e.printStackTrace();

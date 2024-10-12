@@ -1,7 +1,6 @@
-<%@ page import="java.sql.ResultSet" %>
-<%@ page import="java.sql.Statement" %>
-<%@ page import="java.sql.Connection" %>
-<%@ page import="java.sql.DriverManager" %>
+<%@ page import="com.g3app.model.Shipment" %>
+<%@ page import="java.util.ArrayList" %>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -18,7 +17,6 @@
             <section class="form-section animated">
                 <h1 class="formTitle">Shipping Table</h1>
                 
-                <form method="post">
                         <table>
                             <thead>
                                 <tr>
@@ -31,50 +29,42 @@
                                 </tr>
                             </thead>
                             
-                            <%
-                                try
-                                {
-                                    Class.forName("com.mysql.jdbc.Driver");
-                                    String url="jdbc:mysql://localhost:3306/bookstoredb";
-                                    String username="root";
-                                    String password="root";
-                                    String query="select * from shipments";
-                                    Connection conn=DriverManager.getConnection(url, username, password);
-                                    Statement stmt=conn.createStatement();
-                                    ResultSet rs=stmt.executeQuery(query);
-                                    while(rs.next())
-                                    {
-                                %>
+                    
                             <tbody>
+                                
+                                <%
+                                Shipment sment = new Shipment();
+                                ArrayList<Shipment> shipments = sment.getAllShipments();
+                                if (shipments != null && !shipments.isEmpty()) {
+                                    for(Shipment shipment : shipments){
+                                %>
                                 <tr>
-                                    <td><%=rs.getInt("ShipmentID")%></td>
-                                    <td><%=rs.getInt("ShipmentID")%></td>
-                                    <td><%=rs.getString("ShipmentDate")%></td>
-                                    <td><%=rs.getString("ShipmentProgress")%></td>
+                                    <td><%=shipment.getID()%></td>
+                                    <td><%=shipment.getID()%></td>
+                                    <td><%=shipment.getDate()%></td>
+                                    <td><%=shipment.getStatus()%></td>
                                     <td><a href="#" class="button">Edit</a></td>
                                    
-                                        <form action="DeleteShipmentServlet" method="get">           
-                                          <td> <button name = "id" value="<%=rs.getInt("ShipmentID")%>">Cancel</button></td>
-                                        </form>
+                                    <form action="DeleteShipmentServlet" method="get">           
+                                        <td> <button name = "id" value="<%=shipment.getID()%>">Cancel</button></td>
+                                    </form>
 
                                   
                                 </tr>
                                 <%
                                     }
-                                %>
+                                }
+
+                                else {
+                        %>
+                                    <tr>
+                                        <td colspan="5">No shipment found.</td>
+                                    </tr>
+                        <%
+                            }
+                        %>
                             </tbody>
-                        </table>
-                            <%
-                                rs.close();
-                                stmt.close();
-                                conn.close();
-                           }
-                           catch(Exception e)
-                           {
-                                e.printStackTrace();
-                           }
-                           %>
-                         </form>
+                        </table>           
             </section>
         </main>
     </body>
