@@ -1,5 +1,4 @@
 package com.webapp;
-
 import com.g3app.model.StaffUser;
 import org.junit.Before;
 import org.junit.Test;
