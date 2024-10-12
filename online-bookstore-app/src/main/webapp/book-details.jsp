@@ -53,14 +53,14 @@
                         <p><strong>Medium:</strong> <%= book.getMedium() %></span></p>
                         <p><strong>Price:</strong> $<%= book.getPrice() %></p>
                         <p><strong>Genre:</strong> <%= book.getGenre() %></p>
-                        <p><strong>Description:</strong> <%= book.getDescription() %></p><div class="add-to-cart">
-    <form action="cart.jsp" method="POST">
-        <input type="hidden" name="bookId" value="<%= book.getId() %>">
-        <button type="submit" class="btn-add-to-cart">Add to Cart</button>
-    </form>
-</div>
-                    </div>
-                    
+                        <p><strong>Description:</strong> <%= book.getDescription() %></p>
+                        <div class="add-to-cart">
+                            <form action="cart.jsp" method="POST">
+                                <input type="hidden" name="bookId" value="<%= book.getId() %>">
+                                <button type="submit" class="btn-add-to-cart">Add to Cart</button>
+                            </form>
+                        </div>
+                    </div>   
                 </div>
                     
             <%

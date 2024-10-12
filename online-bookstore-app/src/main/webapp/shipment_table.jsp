@@ -52,7 +52,12 @@
                                     <td><%=rs.getString("ShipmentDate")%></td>
                                     <td><%=rs.getString("ShipmentProgress")%></td>
                                     <td><a href="#" class="button">Edit</a></td>
-                                    <td><a href="#" class="button">Cancel</a></td>
+                                   
+                                        <form action="DeleteShipmentServlet" method="get">           
+                                          <td> <button name = "id" value="<%=rs.getInt("ShipmentID")%>">Cancel</button></td>
+                                        </form>
+
+                                  
                                 </tr>
                                 <%
                                     }
