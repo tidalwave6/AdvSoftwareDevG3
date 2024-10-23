@@ -49,6 +49,7 @@ steps:
 
     # USERS TABLE
     mysql -u root -proot -D bookstoredb -e "CREATE TABLE IF NOT EXISTS users (
+        userId INT PRIMARY KEY AUTO_INCREMENT,
         firstName VARCHAR(255) NOT NULL,
         lastName VARCHAR(255) NOT NULL,
         email VARCHAR(255) UNIQUE NOT NULL,
