@@ -101,7 +101,7 @@
                                 Book book = books.get(i);
                         %>
                             <div class="book">
-                                <a href="book-details.jsp?id=<%= book.getId() %>">
+                                <a href="book-details.jsp?id=<%= book.getBookId() %>">
                                     <img src="<%= book.getImgUrl() %>" alt="<%= book.getTitle() %>">
                                     <div class="book-details">
                                         <h3><%= book.getTitle() %></h3>
