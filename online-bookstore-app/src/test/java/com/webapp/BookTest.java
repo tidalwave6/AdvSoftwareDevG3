@@ -23,7 +23,7 @@ public class BookTest {
         book = new Book("book", "author", 19.99, "2024-01-01", "description", "http://image.url", "Fiction", "Paperback");
 
         // create the database connection and DBManager
-        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/bookstoredb", "root", "root");
+        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/bookstoredb", "root", "Passwerd1!");
         dbManager = new DBManager(connection);
 
         // ensure the book does not exist before adding
@@ -49,7 +49,7 @@ public class BookTest {
         Assert.assertTrue("Book should be deleted successfully.", result);
 
         // check that the book no longer exists in the database
-        Book deletedBook = dbManager.getBookById(book.getId());
+        Book deletedBook = dbManager.getBookById(book.getBookId());
         Assert.assertNull("Book should not be found after deletion.", deletedBook);
     }
 
