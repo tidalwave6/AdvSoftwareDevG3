@@ -17,6 +17,52 @@ public class DBManager {
             throw new SQLException("Database connection is null!");
         }
     }
+    
+     // Add a book to the user's wishlist
+    public void addBookToWishlist(int userId, int bookId) throws SQLException {
+        String query = "INSERT INTO wishlist (user_id, book_id) VALUES (?, ?)";
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, bookId);
+            pstmt.executeUpdate();
+        }
+    }
+
+    // Remove a book from the user's wishlist
+    public void removeBookFromWishlist(int userId, int bookId) throws SQLException {
+        String query = "DELETE FROM wishlist WHERE user_id = ? AND book_id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, bookId);
+            pstmt.executeUpdate();
+        }
+    }
+
+    // Retrieve all books in the user's wishlist
+    public List<Book> getWishlist(int userId) throws SQLException {
+        String query = "SELECT b.* FROM books b INNER JOIN wishlist w ON b.id = w.book_id WHERE w.user_id = ?";
+        List<Book> wishlist = new ArrayList<>();
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Book book = new Book(
+                    rs.getInt("id"),
+                    rs.getString("title"),
+                    rs.getString("author"),
+                    rs.getDouble("price"),
+                    rs.getString("publishedDate"),
+                    rs.getString("description"),
+                    rs.getString("imgUrl"),
+                    rs.getString("genre"),
+                    rs.getString("medium")
+                );
+                wishlist.add(book);
+            }
+        }
+        return wishlist;
+    }
 
     // find customer user
     public User findUser(String email) throws SQLException {
@@ -194,22 +240,19 @@ public class DBManager {
     }
 }
     public boolean deleteBookByTitle(String title) throws SQLException {
-    String query = "DELETE FROM books WHERE title = ?";
-    PreparedStatement pstmt = st.getConnection().prepareStatement(query);
+        String query = "DELETE FROM books WHERE title = ?";
+        PreparedStatement pstmt = st.getConnection().prepareStatement(query);
 
-    try {
-         pstmt.setString(1, title); // Set the title parameter
-
-        // Execute the update
-        int rowsAffected = pstmt.executeUpdate();
-        return rowsAffected > 0; // Returns true if a book was deleted
-    } finally {
-        // Close the PreparedStatement if it was initialized
-        if (pstmt != null) {
-            pstmt.close();
+        try {
+            pstmt.setString(1, title);
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+        } finally {
+            if (pstmt != null) {
+                pstmt.close();
+            }
         }
     }
-}
 
     
   public void updateUserDetails(User user) throws SQLException {
@@ -237,63 +280,66 @@ public class DBManager {
     }
     
 public void addBook(Book book) throws SQLException {
-    String query = "INSERT INTO books (title, author, price, publishedDate, description, imgUrl, genre, medium) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    PreparedStatement pstmt = st.getConnection().prepareStatement(query);
-    
-    try {
-        pstmt.setString(1, book.getTitle());
-        pstmt.setString(2, book.getAuthor());
-        pstmt.setDouble(3, book.getPrice());
-        pstmt.setString(4, book.getPublishedDate());
-        pstmt.setString(5, book.getDescription());
-        pstmt.setString(6, book.getImgUrl());
-        pstmt.setString(7, book.getGenre());
-        pstmt.setString(8, book.getMedium());
+        String query = "INSERT INTO books (title, author, price, publishedDate, description, imgUrl, genre, medium) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        PreparedStatement pstmt = st.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
-        pstmt.executeUpdate(); // Execute the insert statement
-    } finally {
-        if (pstmt != null) {
-            pstmt.close(); // Close statement to release resources
+        try {
+            pstmt.setString(1, book.getTitle());
+            pstmt.setString(2, book.getAuthor());
+            pstmt.setDouble(3, book.getPrice());
+            pstmt.setString(4, book.getPublishedDate());
+            pstmt.setString(5, book.getDescription());
+            pstmt.setString(6, book.getImgUrl());
+            pstmt.setString(7, book.getGenre());
+            pstmt.setString(8, book.getMedium());
+
+            pstmt.executeUpdate();
+            ResultSet generatedKeys = pstmt.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                book.setBookId(generatedKeys.getInt(1)); // Set the generated bookId
+            }
+        } finally {
+            if (pstmt != null) {
+                pstmt.close();
+            }
         }
     }
-}
 
     
     public ArrayList<Book> getAllBooks() throws SQLException {
-    ArrayList<Book> books = new ArrayList<>();
-    String query = "SELECT * FROM books"; // Ensure your table structure includes genre and medium
-    PreparedStatement pstmt = st.getConnection().prepareStatement(query);
-    ResultSet rs = pstmt.executeQuery();
+        ArrayList<Book> books = new ArrayList<>();
+        String query = "SELECT * FROM books";
+        PreparedStatement pstmt = st.getConnection().prepareStatement(query);
+        ResultSet rs = pstmt.executeQuery();
 
-    while (rs.next()) {
-        int id = rs.getInt("id");
-        String title = rs.getString("title");
-        String author = rs.getString("author");
-        double price = rs.getDouble("price");
-        String publishedDate = rs.getString("publishedDate");
-        String description = rs.getString("description");
-        String imgUrl = rs.getString("imgUrl");
-        String genre = rs.getString("genre"); // New line to get genre
-        String medium = rs.getString("medium"); // Change the variable name to medium
-
-        Book book = new Book(id, title, author, price, publishedDate, description, imgUrl, genre, medium); // Use medium
-        books.add(book);
+        while (rs.next()) {
+            Book book = new Book(
+                rs.getInt("bookId"),
+                rs.getString("title"),
+                rs.getString("author"),
+                rs.getDouble("price"),
+                rs.getString("publishedDate"),
+                rs.getString("description"),
+                rs.getString("imgUrl"),
+                rs.getString("genre"),
+                rs.getString("medium")
+            );
+            books.add(book);
+        }
+        return books;
     }
-    return books;
-}
 
     
-    public Book getBookById(int id) throws SQLException {
-    Book book = null;
-    String query = "SELECT * FROM books WHERE id = ?"; // Use parameterized query for security
-    PreparedStatement pstmt = st.getConnection().prepareStatement(query);
-    pstmt.setInt(1, id); // Set the ID parameter
-    ResultSet rs = pstmt.executeQuery();
+    public Book getBookById(int bookId) throws SQLException {
+        Book book = null;
+        String query = "SELECT * FROM books WHERE bookId = ?";
+        PreparedStatement pstmt = st.getConnection().prepareStatement(query);
+        pstmt.setInt(1, bookId);
+        ResultSet rs = pstmt.executeQuery();
 
         if (rs.next()) {
-            // Create a book object from the result set
             book = new Book(
-                rs.getInt("id"),
+                rs.getInt("bookId"),
                 rs.getString("title"),
                 rs.getString("author"),
                 rs.getDouble("price"),
@@ -304,11 +350,10 @@ public void addBook(Book book) throws SQLException {
                 rs.getString("medium")
             );
         } else {
-            System.out.println("No book found with ID: " + id); // Debug message
+            System.out.println("No book found with ID: " + bookId);
         }
-    
-    return book; // Return the book object or null if not found
-}
+        return book;
+    }
     
     public void createSupportTicket(SupportTicket ticket) throws SQLException {
         String query = "INSERT INTO support_tickets (customer_name, email, subject_title, type_of_enquiry, issue_description, status, date_submitted) " +
@@ -565,5 +610,5 @@ public void addPaymentMethod(Payment payment) throws SQLException {
         PreparedStatement pstmt = st.getConnection().prepareStatement(query);
         pstmt.setInt(1, paymentId);
         pstmt.executeUpdate();
-}
+    }
 }
