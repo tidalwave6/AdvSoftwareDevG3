@@ -23,7 +23,7 @@ public class BookTest {
         book = new Book("book", "author", 19.99, "2024-01-01", "description", "http://image.url", "Fiction", "Paperback");
 
         // create the database connection and DBManager
-        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/bookstoredb", "root", "Passwerd1!");
+        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/bookstoredb", "root", "root");
         dbManager = new DBManager(connection);
 
         // ensure the book does not exist before adding
