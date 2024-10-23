@@ -1,5 +1,4 @@
 package com.g3app.dao;
-
 import com.g3app.model.*;
 import java.sql.*;
 import java.util.ArrayList;
