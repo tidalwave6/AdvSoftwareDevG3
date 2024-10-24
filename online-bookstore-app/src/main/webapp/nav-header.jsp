@@ -10,6 +10,7 @@
         <ul class="nav-links">
             <li><a href="index.jsp">Home</a></li>
             <li><a href="product.jsp">Products</a></li>
+            <li><a href="wishlist.jsp">Wishlist</a></li>
             
             <%
                 User user = (User) request.getSession().getAttribute("user");
