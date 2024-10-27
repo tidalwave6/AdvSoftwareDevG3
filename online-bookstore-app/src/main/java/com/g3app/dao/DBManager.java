@@ -18,51 +18,6 @@ public class DBManager {
         }
     }
     
-     // Add a book to the user's wishlist
-    public void addBookToWishlist(int userId, int bookId) throws SQLException {
-        String query = "INSERT INTO wishlist (user_id, book_id) VALUES (?, ?)";
-        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setInt(1, userId);
-            pstmt.setInt(2, bookId);
-            pstmt.executeUpdate();
-        }
-    }
-
-    // Remove a book from the user's wishlist
-    public void removeBookFromWishlist(int userId, int bookId) throws SQLException {
-        String query = "DELETE FROM wishlist WHERE user_id = ? AND book_id = ?";
-        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setInt(1, userId);
-            pstmt.setInt(2, bookId);
-            pstmt.executeUpdate();
-        }
-    }
-
-    // Retrieve all books in the user's wishlist
-    public List<Book> getWishlist(int userId) throws SQLException {
-        String query = "SELECT b.* FROM books b INNER JOIN wishlist w ON b.id = w.book_id WHERE w.user_id = ?";
-        List<Book> wishlist = new ArrayList<>();
-        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setInt(1, userId);
-            ResultSet rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                Book book = new Book(
-                    rs.getInt("id"),
-                    rs.getString("title"),
-                    rs.getString("author"),
-                    rs.getDouble("price"),
-                    rs.getString("publishedDate"),
-                    rs.getString("description"),
-                    rs.getString("imgUrl"),
-                    rs.getString("genre"),
-                    rs.getString("medium")
-                );
-                wishlist.add(book);
-            }
-        }
-        return wishlist;
-    }
 
     // find customer user
     public User findUser(String email) throws SQLException {
