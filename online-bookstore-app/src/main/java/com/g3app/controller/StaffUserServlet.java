@@ -74,7 +74,7 @@ public class StaffUserServlet extends HttpServlet {
             }
         }
 
-        // Get the action and parameters from the request
+        // Get action and form data
         String action = request.getParameter("action");
         String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");
@@ -87,35 +87,78 @@ public class StaffUserServlet extends HttpServlet {
         String postcode = request.getParameter("postcode");
         String country = request.getParameter("country");
         String role = request.getParameter("role");
-        String accountStatus = request.getParameter("accountStatus") == null ? "active" : request.getParameter("accountStatus");
+        String accountStatus = request.getParameter("accountStatus");
 
-        // Handle add, update, and delete actions
         try {
-            if ("delete".equals(action)) {
+            if ("update".equals(action)) {
+                // Retrieve staffId and ensure it's valid
+                int staffId = Integer.parseInt(request.getParameter("staffId"));
+
+                // Retrieve the existing user details to update
+                StaffUser staffUser = manager.findStaffUserById(staffId);
+
+                if (staffUser != null) {
+                    // Update user fields
+                    staffUser.setFirstName(firstName);
+                    staffUser.setLastName(lastName);
+                    staffUser.setEmail(email);
+
+                    // Update password only if provided
+                    if (password != null && !password.trim().isEmpty()) {
+                        staffUser.setPassword(password);
+                    }
+
+                    staffUser.setDob(dob);
+                    staffUser.setPhone(phone);
+                    staffUser.setAddress(address);
+                    staffUser.setCity(city);
+                    staffUser.setPostcode(postcode);
+                    staffUser.setCountry(country);
+                    staffUser.setRole(role);
+                    staffUser.setAccountStatus(accountStatus);
+
+                    // Update user in the database
+                    manager.updateStaffUser(staffUser);
+
+                    // Update session to reflect changes
+                    List<StaffUser> staffUsers = manager.getAllStaffUsers();
+                    session.setAttribute("staffUsers", staffUsers);
+
+                    // Redirect to success page or reload the manage users page
+                    response.sendRedirect("manageUsers.jsp");
+                } else {
+                    // Handle case where the user is not found
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND, "Staff user not found.");
+                }
+            } else if ("delete".equals(action)) {
+                // Handle delete action
                 int staffId = Integer.parseInt(request.getParameter("staffId"));
                 manager.deleteStaffUser(staffId);
-            } else {
-                // Create a new StaffUser object without the staffId (auto-assigned by the database)
-                StaffUser staffUser = new StaffUser(firstName, lastName, email, password, dob, phone, address, city, postcode, country, role, accountStatus);
 
-                if ("add".equals(action)) {
-                    manager.addStaffUser(staffUser);
-                } else if ("update".equals(action)) {
-                    int staffId = Integer.parseInt(request.getParameter("staffId")); // Only required for update
-                    staffUser.setStaffId(staffId);
-                    manager.updateStaffUser(staffUser);
-                }
+                // Refresh session data
+                List<StaffUser> staffUsers = manager.getAllStaffUsers();
+                session.setAttribute("staffUsers", staffUsers);
+
+                // Redirect back to manage users page
+                response.sendRedirect("manageUsers.jsp");
+            } else if ("add".equals(action)) {
+                // Handle add new user
+                StaffUser newUser = new StaffUser(firstName, lastName, email, password, dob, phone, 
+                                                  address, city, postcode, country, role, accountStatus);
+                manager.addStaffUser(newUser);
+
+                // Refresh session data
+                List<StaffUser> staffUsers = manager.getAllStaffUsers();
+                session.setAttribute("staffUsers", staffUsers);
+
+                // Redirect to manage users page
+                response.sendRedirect("manageUsers.jsp");
             }
-
-            // Reload the staff users list and forward to JSP
-            List<StaffUser> staffUsers = manager.getAllStaffUsers();
-            session.setAttribute("staffUsers", staffUsers);
-            request.getRequestDispatcher("manageUsers.jsp").forward(request, response);
-
         } catch (SQLException e) {
             throw new ServletException("Error managing staff users", e);
         }
     }
+
 
     // Method to return the database connection
     private Connection getDatabaseConnection() throws SQLException {
