@@ -8,6 +8,8 @@
         <title>Shipment Update</title>
     </head>
     <body>
+        <main>
+            <section class="form-section animated">
         <%String shipmentID = request.getParameter("id");%>
         <% Shipment shipment = new Shipment(); %>
         <% shipment = shipment.getShipmentFromID(Integer.parseInt(shipmentID)); %>
@@ -16,7 +18,7 @@
         
         <form action="shipment" method="post">
                     
-                    <div class="form-group">
+                    <div>
                         <label for="date">Shipment Date</label>
                         <input type="date" name="date" value="<%= shipment.getDate() %>" required>
                     </div>
@@ -31,15 +33,17 @@
                         <input type="text" name="status" value="<%= shipment.getStatus() %>" required>
                     </div>
                             
-                    <div class="form-group">
+                    <div>
                         <label for="id"></label>
                         <input type="hidden" name="id" value="<%=shipment.getID() %>">
                     </div>
                     
-                    <div class="form-group">
+                    <div>
                         <input type="hidden" name="action" value="update">
                         <button type="submit">Update</button>
                     </div>
                 </form>
+            </section>
+        </main>
     </body>
 </html>

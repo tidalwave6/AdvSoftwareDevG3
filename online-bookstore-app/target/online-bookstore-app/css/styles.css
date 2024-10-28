@@ -813,3 +813,46 @@ footer {
 .btn-add-to-cart:hover {
     background-color: #0056b3;
 }
+
+
+/*filter css*/
+/* Container for the entire form */
+.filter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Flexbox to organize the filters in a row */
+.filter-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.filter-item {
+    flex: 1;
+    min-width: 200px; /* Ensures the fields are not too small on narrow screens */
+}
+
+/* Keep the search button centered and compact */
+.submit-container {
+    display: flex;
+    justify-content: center;
+}
+
+.search-button {
+    padding: 10px 20px;
+    background-color: #FF6F61;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+    background-color: #e04b47;
+}
+

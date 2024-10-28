@@ -1,3 +1,5 @@
+<%@ page import="com.g3app.model.Shipment" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,6 +15,8 @@
     <jsp:include page="nav-header.jsp"/>
     <main>
         <section class="form-section animated">
+            
+
             <a href="order.jsp" class="back-arrow">
                 <img src="images/back-arrow.png" alt="Back" />
             </a>
@@ -27,28 +31,28 @@
                     <div class="progress one">
                         <i class="uil uil-check"></i>
                     </div>
-                    <p>Shipping Soon</p>
+                    <p>In Storage</p>
                 </li>
                 <li>
                     <div class="gap"></div>
                     <div class="progress two">
                         <i class="uil uil-check"></i>
                     </div>
-                    <p>Shipped</p>
+                    <p>Shipping Soon</p>
                 </li>
                 <li>
                     <div class="gap"></div>
                     <div class="progress three">
                         <i class="uil uil-check"></i>
                     </div>
-                    <p>On the way</p>
+                    <p>Shipped</p>
                 </li>
                 <li>
                     <div class="gap"></div>
                     <div class="progress four">
                         <i class="uil uil-check"></i>
                     </div>
-                    <p>Out for delivery</p>
+                    <p>On The Way</p>
                 </li>
                 <li>
                     <div class="gap"></div>
@@ -62,15 +66,53 @@
         </section>
 
     </main>
+    
+    <%  int check = 0;
+        String status = "On The Way";
+        switch(status){
+        case "In Storage":check =1 ;
+            break;
+        case "Shipping Soon":check= 2;
+            break;
+        case "Shipped":check = 3;
+            break;
+        case "On The Way":check = 4;
+            break;
+        case "Delivered":check = 5;
+            break;
+        default:check=0;
+    } 
+    
+    %>
 
    <script>
+       
+        
         const one = document.querySelector(".one");
-        const two = document.querySelector(".two");
-        const three = document.querySelector(".three");
-
         one.classList.add("active");
-        two.classList.add("active");
-        three.classList.add("active");
+        
+        if('<%=check%>' >1){
+            const two = document.querySelector(".two");
+            two.classList.add("active");
+        }
+        
+        if('<%=check%>' >2){
+            const three = document.querySelector(".three");
+            three.classList.add("active");
+        }
+        
+        if('<%=check%>' >3){
+            const four = document.querySelector(".four");
+            four.classList.add("active");
+        }
+        
+        if('<%=check%>' >4){
+            const five = document.querySelector(".five");
+            five.classList.add("active");
+        }
+        
+        
+        
    </script>
 </body>
 </html>
