@@ -145,7 +145,7 @@
                 for (Book book : books) {
             %>
                 <tr>
-                    <td><%= book.getId() %></td>
+                    <td><%= book.getBookId() %></td>
                     <td><%= book.getTitle() %></td>
                     <td><%= book.getAuthor() %></td>
                     <td><%= book.getPrice() %></td>
