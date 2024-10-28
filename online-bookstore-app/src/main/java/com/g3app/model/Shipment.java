@@ -2,6 +2,7 @@ package com.g3app.model;
 
 import com.g3app.dao.DBConnector;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -40,4 +41,27 @@ public class Shipment {
     connector.closeConnection();
     return shipments;
     }
+    
+    public Shipment getShipmentFromID(int id) throws Exception {
+    DBConnector connector = new DBConnector();
+    Connection conn = connector.openConnection();
+    Statement st=conn.createStatement();
+    String query = "SELECT * FROM shipments WHERE ShipmentID = ?";
+        PreparedStatement statement = st.getConnection().prepareStatement(query);
+        statement.setInt(1, id);
+        ResultSet rs = statement.executeQuery();
+        if(rs.next()){
+            Shipment shipment = new Shipment();
+            shipment.setID(rs.getInt("ShipmentID"));
+            shipment.setDate(rs.getString("ShipmentDate"));
+            shipment.setProgress(rs.getString("ShipmentProgress"));
+            shipment.setStatus(rs.getString("ShipmentStatus"));
+            connector.closeConnection();
+            return shipment;
+            }
+        connector.closeConnection();
+        return null;
+    }
+    
+    
 }

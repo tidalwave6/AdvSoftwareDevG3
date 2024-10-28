@@ -12,11 +12,17 @@
     </head>
     <body>
         <jsp:include page="staff-nav-header.jsp"/>
+     
 
         <main>
             <section class="form-section animated">
                 <h1 class="formTitle">Shipping Table</h1>
                 
+                <form action="shipment" method="post">           
+                    <input type="hidden" name="action" value="create">
+                    <button type="submit">Create Dummy</button>
+                 </form>
+              
                         <table>
                             <thead>
                                 <tr>
@@ -28,25 +34,27 @@
                                     <th></th>
                                 </tr>
                             </thead>
-                            
+                            <%
+           Shipment sment = new Shipment();
+           ArrayList<Shipment> shipments = sment.getAllShipments();
+           if (shipments != null && !shipments.isEmpty()) {
+           for(Shipment shipment : shipments){
+        %>
                     
                             <tbody>
                                 
-                                <%
-                                Shipment sment = new Shipment();
-                                ArrayList<Shipment> shipments = sment.getAllShipments();
-                                if (shipments != null && !shipments.isEmpty()) {
-                                    for(Shipment shipment : shipments){
-                                %>
                                 <tr>
                                     <td><%=shipment.getID()%></td>
                                     <td><%=shipment.getID()%></td>
                                     <td><%=shipment.getDate()%></td>
                                     <td><%=shipment.getStatus()%></td>
-                                    <td><a href="#" class="button">Edit</a></td>
+                                    <td><a href="shipment_update.jsp?id=<%= shipment.getID() %>" class="button">Edit</a></td>
                                    
-                                    <form action="DeleteShipmentServlet" method="get">           
-                                        <td> <button name = "id" value="<%=shipment.getID()%>">Cancel</button></td>
+                                    <form action="shipment" method="post">           
+                                        <td> 
+                                            <input type="hidden" name="action" value="delete">
+                                            <button name = "id" value="<%=shipment.getID()%>">Cancel</button>
+                                        </td>
                                     </form>
 
                                   
