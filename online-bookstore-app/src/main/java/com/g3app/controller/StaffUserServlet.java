@@ -122,7 +122,7 @@ public class StaffUserServlet extends HttpServlet {
         try {
             String dbUrl = "jdbc:mysql://localhost:3306/bookstoredb";
             String username = "root";
-            String password = "root";
+            String password = "Passwerd1!";
             Class.forName("com.mysql.cj.jdbc.Driver");
             return DriverManager.getConnection(dbUrl, username, password);
         } catch (ClassNotFoundException | SQLException e) {
