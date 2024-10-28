@@ -146,6 +146,33 @@ public class DBManager {
         pstmt.setInt(6, staffUser.getStaffId());
         pstmt.executeUpdate();
     }
+    
+    public StaffUser findStaffUserById(int staffId) throws SQLException {
+        String query = "SELECT * FROM staffusers WHERE staffId = ?";
+        PreparedStatement pstmt = conn.prepareStatement(query);
+        pstmt.setInt(1, staffId);
+        ResultSet rs = pstmt.executeQuery();
+
+        if (rs.next()) {
+            return new StaffUser(
+                rs.getString("firstName"),
+                rs.getString("lastName"),
+                rs.getString("email"),
+                rs.getString("password"),
+                rs.getString("dob"),
+                rs.getString("phone"),
+                rs.getString("address"),
+                rs.getString("city"),
+                rs.getString("postcode"),
+                rs.getString("country"),
+                rs.getString("role"),
+                rs.getString("accountStatus"),
+                staffId
+            );
+        }
+        return null; // No user found
+    }
+
 
     // Search staff users by name
     public List<StaffUser> searchStaffUsers(String name) throws SQLException {
