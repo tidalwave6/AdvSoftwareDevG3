@@ -46,9 +46,9 @@ public class ShipmentServlet extends HttpServlet{
             if("create".equals(action)){
                 Shipment newShipment = new Shipment();
                 newShipment.setID(1000);
-                newShipment.setDate("2000-01-01");
-                newShipment.setProgress("dummy");
-                newShipment.setStatus("dummy");
+                newShipment.setDate("2024-10-29");
+                newShipment.setProgress("Shipping Soon");
+                newShipment.setStatus("In Progress");
                 dbManager.createShipment(newShipment);
             }
            

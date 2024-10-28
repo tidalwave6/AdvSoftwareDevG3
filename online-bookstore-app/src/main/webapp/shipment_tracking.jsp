@@ -15,14 +15,16 @@
     <jsp:include page="nav-header.jsp"/>
     <main>
         <section class="form-section animated">
-            
+            <%String shipmentID = request.getParameter("id");%>
+            <% Shipment shipment = new Shipment(); %>
+            <% shipment = shipment.getShipmentFromID(Integer.parseInt(shipmentID)); %>
 
             <a href="order.jsp" class="back-arrow">
                 <img src="images/back-arrow.png" alt="Back" />
             </a>
 
             <h1>Shipment Tracking</h1>
-            <p>Order Number: 100001</p>
+            <p>Shipment ID: <%=shipmentID%></p>
             <p>Expected Delivery time : 3 Days</p>
 
             <ul>
@@ -68,8 +70,8 @@
     </main>
     
     <%  int check = 0;
-        String status = "On The Way";
-        switch(status){
+        String progress = shipment.getProgress();
+        switch(progress){
         case "In Storage":check =1 ;
             break;
         case "Shipping Soon":check= 2;

@@ -1,3 +1,5 @@
+<%@page import="java.util.List"%>
+<%@page import="com.g3app.model.StaffUser"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,31 +12,39 @@
     <jsp:include page="staff-nav-header.jsp"/>
 
     <div class="container">
-        <h1>User Management</h1>
-        
+        <h1>Admin Management Screen</h1>
+
         <!-- Search Users Form -->
         <h2>Search Users</h2>
-        <form>
-            <input type="text" name="name" placeholder="Search by name" required>
+        <form method="GET" action="StaffUserServlet">
+            <input type="hidden" name="action" value="search">
+            <input type="text" name="name" placeholder="Search by name">
             <button type="submit">Search</button>
         </form>
 
         <!-- Create New User Form -->
-        <h2>Create New User</h2>
-        <form>
-            <input type="text" name="name" placeholder="Name" required>
+        <h2>New User</h2>
+        <form method="POST" action="StaffUserServlet">
+            <input type="hidden" name="action" value="add">
+            <input type="text" name="firstName" placeholder="First Name" required>
+            <input type="text" name="lastName" placeholder="Last Name" required>
             <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Password" required>
+            <input type="date" name="dob" placeholder="Date of Birth">
+            <input type="text" name="phone" placeholder="Phone">
+            <input type="text" name="address" placeholder="Address">
+            <input type="text" name="city" placeholder="City">
+            <input type="text" name="postcode" placeholder="Postcode">
+            <input type="text" name="country" placeholder="Country">
 
             <label for="role">Role:</label>
             <select name="role" required>
                 <option value="admin">Admin</option>
-                <option value="customer">Customer</option>
                 <option value="staff">Staff</option>
             </select>
 
-            <label for="status">Status:</label>
-            <select name="status" required>
+            <label for="accountStatus">Account Status:</label>
+            <select name="accountStatus" required>
                 <option value="active">Active</option>
                 <option value="inactive">Inactive</option>
             </select>
@@ -43,33 +53,80 @@
         </form>
 
         <!-- Manage Existing Staff Users Section -->
-        <h2>Manage Existing Staff and Customer Users</h2>
+        <h2>Users</h2>
+        <%
+            List<StaffUser> staffUsers = (List<StaffUser>) session.getAttribute("staffUsers");
+            if (staffUsers != null && !staffUsers.isEmpty()) {
+                for (StaffUser staffUser : staffUsers) {
+        %>
         <div class="styled-table-admin">
-            <form class="form-admin">
+            <form method="POST" action="StaffUserServlet" class="form-admin">
+                <input type="hidden" name="action" value="update">
+                <input type="hidden" name="staffId" value="<%= staffUser.getStaffId() %>">
+
                 <div class="form-field">
-                    <label>Name:</label>
-                    <input type="text" name="name" value="John Smith" required>
+                    <label>First Name:</label>
+                    <input type="text" name="firstName" value="<%= staffUser.getFirstName() %>" required>
+                </div>
+
+                <div class="form-field">
+                    <label>Last Name:</label>
+                    <input type="text" name="lastName" value="<%= staffUser.getLastName() %>" required>
                 </div>
 
                 <div class="form-field">
                     <label>Email:</label>
-                    <input type="email" name="email" value="johnSmith@example.com" required>
+                    <input type="email" name="email" value="<%= staffUser.getEmail() %>" required>
+                </div>
+
+                <div class="form-field">
+                    <label>Password:</label>
+                    <input type="password" name="password" value="<%= staffUser.getPassword() %>" required>
+                </div>
+
+                <div class="form-field">
+                    <label>Date of Birth:</label>
+                    <input type="date" name="dob" value="<%= staffUser.getDob() %>">
+                </div>
+
+                <div class="form-field">
+                    <label>Phone:</label>
+                    <input type="text" name="phone" value="<%= staffUser.getPhone() %>">
+                </div>
+
+                <div class="form-field">
+                    <label>Address:</label>
+                    <input type="text" name="address" value="<%= staffUser.getAddress() %>">
+                </div>
+
+                <div class="form-field">
+                    <label>City:</label>
+                    <input type="text" name="city" value="<%= staffUser.getCity() %>">
+                </div>
+
+                <div class="form-field">
+                    <label>Postcode:</label>
+                    <input type="text" name="postcode" value="<%= staffUser.getPostcode() %>">
+                </div>
+
+                <div class="form-field">
+                    <label>Country:</label>
+                    <input type="text" name="country" value="<%= staffUser.getCountry() %>">
                 </div>
 
                 <div class="form-field">
                     <label>Role:</label>
                     <select name="role" required>
-                        <option value="admin">Admin</option>
-                        <option value="customer">Customer</option>
-                        <option value="staff" selected>Staff</option>
+                        <option value="admin" <%= "admin".equals(staffUser.getRole()) ? "selected" : "" %>>Admin</option>
+                        <option value="staff" <%= "staff".equals(staffUser.getRole()) ? "selected" : "" %>>Staff</option>
                     </select>
                 </div>
 
                 <div class="form-field">
-                    <label>Status:</label>
-                    <select name="status" required>
-                        <option value="active" selected>Active</option>
-                        <option value="inactive">Inactive</option>
+                    <label>Account Status:</label>
+                    <select name="accountStatus" required>
+                        <option value="active" <%= "active".equals(staffUser.getAccountStatus()) ? "selected" : "" %>>Active</option>
+                        <option value="inactive" <%= "inactive".equals(staffUser.getAccountStatus()) ? "selected" : "" %>>Inactive</option>
                     </select>
                 </div>
 
@@ -78,13 +135,21 @@
                 </div>
             </form>
 
-            <form class="form-admin">
+            <!-- Delete User Form -->
+            <form method="POST" action="StaffUserServlet" class="form-admin">
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" name="staffId" value="<%= staffUser.getStaffId() %>">
                 <button type="submit" class="delete-button">Delete User</button>
             </form>
         </div>
-
-        <!-- Placeholder message for no users -->
+        <%
+                }
+            } else {
+        %>
         <p>No users found.</p>
+        <%
+            }
+        %>
     </div>
 </body>
 </html>

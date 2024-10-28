@@ -32,6 +32,7 @@
                                     <th>Shipping Progress</th>
                                     <th>Shipping Status</th>
                                     <th></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <%
@@ -56,8 +57,8 @@
                                             <button name = "id" value="<%=shipment.getID()%>">Cancel</button>
                                         </td>
                                     </form>
-
-                                  
+                            
+                                   <td><a href="shipment_tracking.jsp?id=<%= shipment.getID() %>" class="button">Track</a></td>
                                 </tr>
                                 <%
                                     }
@@ -66,7 +67,7 @@
                                 else {
                         %>
                                     <tr>
-                                        <td colspan="5">No shipment found.</td>
+                                        <td colspan="6">No shipment found.</td>
                                     </tr>
                         <%
                             }
