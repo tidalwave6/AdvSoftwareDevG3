@@ -80,6 +80,41 @@
                 </div>
 
                 <div class="form-field">
+                    <label>Password:</label>
+                    <input type="password" name="password" value="<%= staffUser.getPassword() %>" required>
+                </div>
+
+                <div class="form-field">
+                    <label>Date of Birth:</label>
+                    <input type="date" name="dob" value="<%= staffUser.getDob() %>">
+                </div>
+
+                <div class="form-field">
+                    <label>Phone:</label>
+                    <input type="text" name="phone" value="<%= staffUser.getPhone() %>">
+                </div>
+
+                <div class="form-field">
+                    <label>Address:</label>
+                    <input type="text" name="address" value="<%= staffUser.getAddress() %>">
+                </div>
+
+                <div class="form-field">
+                    <label>City:</label>
+                    <input type="text" name="city" value="<%= staffUser.getCity() %>">
+                </div>
+
+                <div class="form-field">
+                    <label>Postcode:</label>
+                    <input type="text" name="postcode" value="<%= staffUser.getPostcode() %>">
+                </div>
+
+                <div class="form-field">
+                    <label>Country:</label>
+                    <input type="text" name="country" value="<%= staffUser.getCountry() %>">
+                </div>
+
+                <div class="form-field">
                     <label>Role:</label>
                     <select name="role" required>
                         <option value="admin" <%= "admin".equals(staffUser.getRole()) ? "selected" : "" %>>Admin</option>
@@ -111,7 +146,6 @@
                 }
             } else {
         %>
-        <!-- Placeholder message for no users -->
         <p>No users found.</p>
         <%
             }
