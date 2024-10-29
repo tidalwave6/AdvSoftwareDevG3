@@ -136,16 +136,31 @@ public class DBManager {
 
     // Update staff user
     public void updateStaffUser(StaffUser staffUser) throws SQLException {
-        String query = "UPDATE staffusers SET firstName = ?, email = ?, password = ?, role = ?, accountStatus = ? WHERE staffId = ?";
-        PreparedStatement pstmt = st.getConnection().prepareStatement(query);
+    String query = "UPDATE staffusers SET firstName = ?, lastName = ?, email = ?, " +
+                   "password = ?, dob = ?, phone = ?, address = ?, city = ?, " +
+                   "postcode = ?, country = ?, role = ? WHERE staffId = ?";
+
+    try (PreparedStatement pstmt = conn.prepareStatement(query)) {
         pstmt.setString(1, staffUser.getFirstName());
-        pstmt.setString(2, staffUser.getEmail());
-        pstmt.setString(3, staffUser.getPassword());
-        pstmt.setString(4, staffUser.getRole());
-        pstmt.setString(5, staffUser.getAccountStatus());
-        pstmt.setInt(6, staffUser.getStaffId());
-        pstmt.executeUpdate();
+        pstmt.setString(2, staffUser.getLastName());
+        pstmt.setString(3, staffUser.getEmail());
+        pstmt.setString(4, staffUser.getPassword());
+        pstmt.setString(5, staffUser.getDob());
+        pstmt.setString(6, staffUser.getPhone());
+        pstmt.setString(7, staffUser.getAddress());
+        pstmt.setString(8, staffUser.getCity());
+        pstmt.setString(9, staffUser.getPostcode());
+        pstmt.setString(10, staffUser.getCountry());
+        pstmt.setString(11, staffUser.getRole());
+        pstmt.setInt(12, staffUser.getStaffId()); // Ensure this is an int
+
+        int rowsAffected = pstmt.executeUpdate();
+        if (rowsAffected == 0) {
+            throw new SQLException("Update failed: No user found with the provided staffId.");
+        }
     }
+}
+
     
     public StaffUser findStaffUserById(int staffId) throws SQLException {
         String query = "SELECT * FROM staffusers WHERE staffId = ?";
