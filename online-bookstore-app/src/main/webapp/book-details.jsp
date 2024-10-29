@@ -34,7 +34,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %> - Bookstore</title>  <!-- Now title is correctly initialized -->
+    <title><%= title %> - Bookstore</title>
     <link rel="stylesheet" type="text/css" href="css/styles.css">
 </head>
 <body>
@@ -60,9 +60,17 @@
                     <p><strong>Genre:</strong> <%= book.getGenre() %></p>
                     <p><strong>Description:</strong> <%= book.getDescription() %></p>
 
+                    <!-- Add to Cart Form with Editable Quantity -->
                     <div class="add-to-cart">
                         <form action="cart.jsp" method="POST">
                             <input type="hidden" name="bookId" value="<%= book.getBookId() %>">
+                            <input type="hidden" name="title" value="<%= book.getTitle() %>">
+                            <input type="hidden" name="price" value="<%= book.getPrice() %>">
+                            
+                            <!-- Editable Quantity Input -->
+                            <label for="quantity">Quantity:</label>
+                            <input type="number" id="quantity" name="quantity" value="1" min="1">
+                            
                             <button type="submit" class="btn-add-to-cart">Add to Cart</button>
                         </form>
                     </div>
