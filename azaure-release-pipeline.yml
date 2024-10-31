@@ -6,11 +6,12 @@ pr: none
 resources:
   pipelines:
     - pipeline: sourcePipeline
-      source: 'azure-pipelines'  # Reference your build pipeline name
+      source: 'tidalwave6.AdvSoftwareDevG3'  # Exact name of your build pipeline
       trigger:
         branches:
           include:
-            - main  # Trigger release from main branch builds
+            - main
+
 
 stages:
 - stage: Deploy
