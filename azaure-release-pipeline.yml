@@ -1,0 +1,36 @@
+# Release pipeline YAML file for deploying build artifacts to Azure App Service
+
+trigger: none  # Release is triggered only on successful builds, not on code pushes
+pr: none
+
+resources:
+  pipelines:
+    - pipeline: sourcePipeline
+      source: 'azure-pipelines'  # Reference your build pipeline name
+      trigger:
+        branches:
+          include:
+            - main  # Trigger release from main branch builds
+
+stages:
+- stage: Deploy
+  displayName: 'Deploy to Azure App Service'
+  jobs:
+  - deployment: DeployApp
+    displayName: 'Deploy to Production'
+    environment: 'Production'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          # Download the build artifact from the previous pipeline
+          - download: sourcePipeline
+            artifact: drop  # Name of the artifact published in the build pipeline (keep this as "drop" if the artifact name matches)
+
+          # Deploy to Azure App Service
+          - task: AzureWebApp@1
+            inputs:
+              azureSubscription: 'AzureServiceConnection-Bookstore'  # Replace with your Azure service connection name in Azure DevOps
+              appName: 'AdvSoftwareBookstore'  
+              package: '$(Pipeline.Workspace)/drop/online-bookstore-app.zip'
+              deploymentMethod: 'auto'  # Choose between auto, run-from-package, or zip deploy
