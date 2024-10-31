@@ -12,7 +12,6 @@ resources:
           include:
             - main
 
-
 stages:
 - stage: Deploy
   displayName: 'Deploy to Azure App Service'
@@ -26,7 +25,7 @@ stages:
           steps:
           # Download the build artifact from the previous pipeline
           - download: sourcePipeline
-            artifact: drop  # Name of the artifact published in the build pipeline (keep this as "drop" if the artifact name matches)
+            artifact: drop  # This should match the artifact name published in the build pipeline
 
           # Deploy to Azure App Service
           - task: AzureWebApp@1
