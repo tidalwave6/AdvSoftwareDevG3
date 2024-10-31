@@ -107,37 +107,69 @@ steps:
   displayName: 'Set up MySQL Database and Create Tables'
 
 # RUN MAVEN TO BUILD PROJECT AND RUN UNIT TESTS 
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'online-bookstore-app/pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '21'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: true
-    testResultsFiles: '**/target/surefire-reports/TEST-*.xml'
-    goals: 'verify' # triggers execution of unit tests
-  displayName: 'Build and Run Tests with Maven'
+    - task: Maven@3
+      inputs:
+        mavenPomFile: 'online-bookstore-app/pom.xml'
+        mavenOptions: '-Xmx3072m'
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '21'
+        jdkArchitectureOption: 'x64'
+        publishJUnitResults: true
+        testResultsFiles: '**/target/surefire-reports/TEST-*.xml'
+        goals: 'verify' # triggers execution of unit tests
+      displayName: 'Build and Run Tests with Maven'
 
-# PUBLISH TEST RESULTS
-- task: PublishTestResults@2
-  inputs:
-    testResultsFormat: 'JUnit'
-    testResultsFiles: '**/target/surefire-reports/TEST-*.xml'
-    failTaskOnFailedTests: true
-  displayName: 'Publish Test Results'
+    # PUBLISH TEST RESULTS
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/target/surefire-reports/TEST-*.xml'
+        failTaskOnFailedTests: true
+      displayName: 'Publish Test Results'
 
-# ZIP BUILD ARTIFACTS
-- script: |
-    cd $(Build.SourcesDirectory)/online-bookstore-app/target
-    zip -r $(Build.ArtifactStagingDirectory)/online-bookstore-app.zip .
-  displayName: 'Zip Build Artifacts'
+    # ZIP BUILD ARTIFACTS
+    - script: |
+        cd $(Build.SourcesDirectory)/online-bookstore-app/target
+        zip -r $(Build.ArtifactStagingDirectory)/online-bookstore-app.zip .
+      displayName: 'Zip Build Artifacts'
 
-# PUBLISH ARTIFACT STEP
-- task: PublishPipelineArtifact@1
-  condition: succeeded() # publish only if build succeeds
-  inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)'
-    artifact: drop
-    publishLocation: 'pipeline'
-  displayName: 'Publish Pipeline Artifact: drop'
+    # PUBLISH ARTIFACT STEP
+    - task: PublishPipelineArtifact@1
+      condition: succeeded() # publish only if build succeeds
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)'
+        artifact: drop
+        publishLocation: 'pipeline'
+      displayName: 'Publish Pipeline Artifact: drop'
+
+- stage: Deploy
+  displayName: 'Deploy to Azure App Service'
+  jobs:
+  - deployment: DeployApp
+    displayName: 'Deploy to Production'
+    environment: 'Production'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          # Download the build artifact from the previous stage
+          - download: current
+            artifact: drop  # This should match the artifact name published in the build stage
+
+          # Verify if the artifact exists (optional debugging)
+          - script: |
+              echo "Contents of Pipeline.Workspace:"
+              ls $(Pipeline.Workspace)  # List all files in the workspace
+              echo "Contents of downloaded drop directory:"
+              ls $(Pipeline.Workspace)/drop || echo "No drop directory found"  # Check for the drop directory
+            displayName: 'List downloaded files'  # Optional debugging step
+
+          # Deploy to Azure App Service
+          - task: AzureWebApp@1
+            displayName: 'Deploy to Azure App Service'
+            inputs:
+              azureSubscription: 'AzureServiceConnection-Bookstore'  # Replace with your Azure service connection name
+              appName: 'AdvSoftwareBookstore'  # Replace with the name of your Azure App Service
+              package: '$(Pipeline.Workspace)/drop/online-bookstore-app.zip'  # Path to the artifact
+              deploymentMethod: 'auto'  # Choose between auto, run-from-package, or zip deploy
+
