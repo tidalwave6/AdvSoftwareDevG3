@@ -131,8 +131,10 @@ steps:
 
 # ZIP BUILD ARTIFACTS
 - script: |
-    zip -r $(Build.ArtifactStagingDirectory)/online-bookstore-app.zip $(Build.SourcesDirectory)/online-bookstore-app/target
+    cd $(Build.SourcesDirectory)/online-bookstore-app/target
+    zip -r $(Build.ArtifactStagingDirectory)/online-bookstore-app.zip .
   displayName: 'Zip Build Artifacts'
+
 
 # PUBLISH ARTIFACT STEP
 - task: PublishPipelineArtifact@1
