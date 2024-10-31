@@ -29,7 +29,8 @@ steps:
     mysql -u root -proot -e "GRANT ALL PRIVILEGES ON bookstoredb.* TO 'root'@'localhost';"
     mysql -u root -proot -e "FLUSH PRIVILEGES;"
    
-    # STAFF TABLE
+    
+    #STAFF TABLE
     mysql -u root -proot -D bookstoredb -e "CREATE TABLE IF NOT EXISTS staffusers (
       staffId INT PRIMARY KEY AUTO_INCREMENT,
       firstName VARCHAR(255) NOT NULL,
@@ -48,7 +49,6 @@ steps:
 
     # USERS TABLE
     mysql -u root -proot -D bookstoredb -e "CREATE TABLE IF NOT EXISTS users (
-        userId INT PRIMARY KEY AUTO_INCREMENT,
         firstName VARCHAR(255) NOT NULL,
         lastName VARCHAR(255) NOT NULL,
         email VARCHAR(255) UNIQUE NOT NULL,
@@ -63,7 +63,7 @@ steps:
 
     # BOOKS TABLE
     mysql -u root -proot -D bookstoredb -e "CREATE TABLE books (
-      bookId INT AUTO_INCREMENT PRIMARY KEY,
+      BookId INT AUTO_INCREMENT PRIMARY KEY,
       title VARCHAR(255),
       author VARCHAR(255),
       price DECIMAL(10, 2),
@@ -106,6 +106,7 @@ steps:
   
   displayName: 'Set up MySQL Database and Create Tables'
 
+
 # RUN MAVEN TO BUILD PROJECT AND RUN UNIT TESTS 
 - task: Maven@3
   inputs:
@@ -129,8 +130,7 @@ steps:
 
 # ZIP BUILD ARTIFACTS
 - script: |
-    cd $(Build.SourcesDirectory)/online-bookstore-app/target
-    zip -r $(Build.ArtifactStagingDirectory)/online-bookstore-app.zip .
+    zip -r $(Build.ArtifactStagingDirectory)/online-bookstore-app.zip $(Build.SourcesDirectory)/online-bookstore-app/target
   displayName: 'Zip Build Artifacts'
 
 # PUBLISH ARTIFACT STEP
@@ -141,34 +141,3 @@ steps:
     artifact: drop
     publishLocation: 'pipeline'
   displayName: 'Publish Pipeline Artifact: drop'
-
-- stage: Deploy
-  displayName: 'Deploy to Azure App Service'
-  jobs:
-  - deployment: DeployApp
-    displayName: 'Deploy to Production'
-    environment: 'Production'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          # Download the build artifact from the previous stage
-          - download: current
-            artifact: drop  # This should match the artifact name published in the build stage
-
-          # Verify if the artifact exists (optional debugging)
-          - script: |
-              echo "Contents of Pipeline.Workspace:"
-              ls $(Pipeline.Workspace)  # List all files in the workspace
-              echo "Contents of downloaded drop directory:"
-              ls $(Pipeline.Workspace)/drop || echo "No drop directory found"  # Check for the drop directory
-            displayName: 'List downloaded files'  # Optional debugging step
-
-          # Deploy to Azure App Service
-          - task: AzureWebApp@1
-            displayName: 'Deploy to Azure App Service'
-            inputs:
-              azureSubscription: 'AzureServiceConnection-Bookstore'  # Replace with your Azure service connection name
-              appName: 'AdvSoftwareBookstore'  # Replace with the name of your Azure App Service
-              package: '$(Pipeline.Workspace)/drop/online-bookstore-app.zip'  # Path to the artifact
-              deploymentMethod: 'auto'  # Choose between auto, run-from-package, or zip deploy
