@@ -1,6 +1,4 @@
-# Release pipeline YAML file for deploying build artifacts to Azure App Service
-
-trigger: none  # Release is triggered only on successful builds, not on code pushes
+trigger: none  # Trigger only on successful builds, not on code pushes
 pr: none
 
 resources:
@@ -11,6 +9,9 @@ resources:
         branches:
           include:
             - main
+
+pool:
+  vmImage: ubuntu-latest
 
 stages:
 - stage: Deploy
@@ -31,6 +32,7 @@ stages:
           - task: AzureWebApp@1
             inputs:
               azureSubscription: 'AzureServiceConnection-Bookstore'  # Replace with your Azure service connection name in Azure DevOps
-              appName: 'AdvSoftwareBookstore'  
+              appName: 'AdvSoftwareBookstore'  # Replace with the name of your Azure App Service
               package: '$(Pipeline.Workspace)/drop/online-bookstore-app.zip'
               deploymentMethod: 'auto'  # Choose between auto, run-from-package, or zip deploy
+  displayName: 'Deploy to Azure App Service'
