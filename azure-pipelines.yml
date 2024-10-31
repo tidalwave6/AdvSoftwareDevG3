@@ -29,8 +29,7 @@ steps:
     mysql -u root -proot -e "GRANT ALL PRIVILEGES ON bookstoredb.* TO 'root'@'localhost';"
     mysql -u root -proot -e "FLUSH PRIVILEGES;"
    
-    
-    #STAFF TABLE
+    # STAFF TABLE
     mysql -u root -proot -D bookstoredb -e "CREATE TABLE IF NOT EXISTS staffusers (
       staffId INT PRIMARY KEY AUTO_INCREMENT,
       firstName VARCHAR(255) NOT NULL,
@@ -106,7 +105,6 @@ steps:
     );"
   
   displayName: 'Set up MySQL Database and Create Tables'
-
 
 # RUN MAVEN TO BUILD PROJECT AND RUN UNIT TESTS 
 - task: Maven@3
