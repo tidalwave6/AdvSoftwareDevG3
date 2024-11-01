@@ -32,6 +32,7 @@ Online Bookstore System
 - **Sarneet** 
   - Staff Login/Registration + management feature
   - Created staff login and registration pages
+  - Worked on all the pages relating to the new Wishlist Feature
   - Created staffUser database
   - Created staff dashboard and accompanying JSP pages
   - Book Catalogue feature
