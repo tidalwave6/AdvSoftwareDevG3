@@ -26,7 +26,7 @@ public class WishlistServlet extends HttpServlet {
         try {
             // Initialize the database connection and DBManager instance
             Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/bookstoredb", "root", "root"); // Replace with your credentials
+                    "jdbc:mysql://localhost:3306/bookstoredb", "root", "Passwerd1!"); // Replace with your credentials
             dbManager = new DBManager(conn);
         } catch (SQLException e) {
             e.printStackTrace();
